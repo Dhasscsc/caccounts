@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>தாஸ் பொது சேவை மையம் - வாடிக்கையாளர் மேலாண்மை</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Nirmala UI', 'Latha', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin: 0;
+            padding: 20px;
+            color: #2c3e50;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 3px solid #2c3e50;
+        }
+        .header-top {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .company-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        .company-name {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .company-tagline {
+            font-size: 16px;
+            opacity: 0.9;
+            margin: 0 0 15px 0;
+        }
+        .company-details {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+        .contact-info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-left: 30px;
+            min-width: 300px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+        .contact-icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 25px 40px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            border-top: 6px solid;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .stat-card h3 {
+            margin-top: 0;
+            color: #495057;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-card .amount {
+            font-size: 34px;
+            font-weight: 800;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .customers { border-color: #3498db; }
+        .active { border-color: #2ecc71; }
+        .debt { border-color: #e74c3c; }
+        .revenue { border-color: #f39c12; }
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
+        
+        .tabs {
+            display: flex;
+            background: #2c3e50;
+            border-bottom: 2px solid #1a252f;
+        }
+        .tab-btn {
+            padding: 20px 35px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            color: #bdc3c7;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+        .tab-btn.active {
+            color: white;
+            background: #3498db;
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: white;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            min-height: 800px;
+        }
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .sidebar {
+            background: #f8f9fa;
+            padding: 35px;
+            border-right: 2px solid #dee2e6;
+        }
+        .content-area {
+            padding: 35px;
+            background: white;
+            overflow-x: auto;
+        }
+        
+        .form-container, .services-container, .reports-container {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .form-container.active, .services-container.active, .reports-container.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 15px;
+        }
+        label.required::after {
+            content: ' *';
+            color: #e74c3c;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #ced4da;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: white;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .service-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .primary-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            flex: 1;
+        }
+        .primary-btn:hover {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+        .secondary-btn {
+            background: #2ecc71;
+            color: white;
+        }
+        .secondary-btn:hover {
+            background: #27ae60;
+            transform: translateY(-3px);
+        }
+        .danger-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        .danger-btn:hover {
+            background: #c0392b;
+        }
+        .warning-btn {
+            background: #f39c12;
+            color: white;
+        }
+        .warning-btn:hover {
+            background: #e67e22;
+        }
+        .outline-btn {
+            background: white;
+            color: #2c3e50;
+            border: 2px solid #ced4da;
+        }
+        .outline-btn:hover {
+            background: #f8f9fa;
+            border-color: #3498db;
+        }
+        .print-btn {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+        .print-btn:hover {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+        }
+        
+        .search-filter {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .search-filter input, .search-filter select {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #dee2e6;
+        }
+        thead {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+        }
+        th, td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+            white-space: nowrap;
+        }
+        th {
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        tr.debt-high {
+            background-color: #ffeaea;
+            border-left: 4px solid #e74c3c;
+        }
+        tr.debt-medium {
+            background-color: #fff4e6;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .customer-id {
+            font-weight: 700;
+            color: #2c3e50;
+            font-family: 'Courier New', monospace;
+        }
+        .customer-name {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 17px;
+        }
+        .customer-phone {
+            color: #3498db;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .debt-amount {
+            color: #e74c3c;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .paid-amount {
+            color: #27ae60;
+            font-weight: 700;
+        }
+        .balance-amount {
+            color: #f39c12;
+            font-weight: 700;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .service-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .service-tag {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .small-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 8px;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 60px;
+            color: #6c757d;
+        }
+        .no-data-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .payment-history {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        
+        .report-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            border: 2px solid #dee2e6;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #2c3e50;
+            font-size: 15px;
+            border-top: 2px solid #dee2e6;
+            background: #f8f9fa;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white;
+                padding: 0;
+                font-size: 12px;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                border: none;
+            }
+            .main-content {
+                display: block;
+            }
+            .sidebar {
+                display: none;
+            }
+            table {
+                font-size: 11px;
+                box-shadow: none;
+            }
+            th, td {
+                padding: 10px 12px;
+            }
+            .print-header {
+                text-align: center;
+                margin-bottom: 40px;
+                padding-bottom: 20px;
+                border-bottom: 3px solid #2c3e50;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-top">
+            <div class="company-info">
+                <h1 class="company-name">தாஸ் பொது சேவை மையம்</h1>
+                <p class="company-tagline">(மத்திய மாநில அரசு அங்கீகாரம் பெற்றது)</p>
+                <div class="company-details">
+                    147எ, கிரேட் காட்டன் ரோடு, மத்திய பாகம் காவல் நிலையம் எதிரில்,<br>
+                    தூத்துக்குடி-628001
+                </div>
+            </div>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span class="contact-icon">📱</span>
+                    <span>98 43 23 23 24 / 88 70 23 23 32 / 95 85 33 43 65</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">✉️</span>
+                    <span>dhasscsc@gmail.com</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">🏢</span>
+                    <span>தூத்துக்குடி பொது சேவை மையம்</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">⏰</span>
+                    <span>திங்கள் - சனி: 9:00 AM - 8:00 PM</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard no-print">
+            <div class="stat-card customers">
+                <h3>மொத்த வாடிக்கையாளர்கள்</h3>
+                <div class="amount" id="total-customers">0</div>
+                <p>பதிவுசெய்த வாடிக்கையாளர்கள்</p>
+            </div>
+            <div class="stat-card active">
+                <h3>செயலில் உள்ளவர்கள்</h3>
+                <div class="amount" id="active-customers">0</div>
+                <p>தற்போது சேவை பெறுபவர்கள்</p>
+            </div>
+            <div class="stat-card debt">
+                <h3>மொத்த கடன் தொகை</h3>
+                <div class="amount negative" id="total-debt">₹0</div>
+                <p>செலுத்தப்பட வேண்டியது</p>
+            </div>
+            <div class="stat-card revenue">
+                <h3>மொத்த வருவாய்</h3>
+                <div class="amount positive" id="total-revenue">₹0</div>
+                <p>செலுத்தப்பட்ட தொகை</p>
+            </div>
+        </div>
+        
+        <div class="tabs no-print">
+            <button class="tab-btn active" onclick="switchTab('customer')">
+                👤 புதிய வாடிக்கையாளர்
+            </button>
+            <button class="tab-btn" onclick="switchTab('customers')">
+                📋 வாடிக்கையாளர்கள்
+            </button>
+            <button class="tab-btn" onclick="switchTab('payment')">
+                💰 கட்டணம் சேர்க்க
+            </button>
+            <button class="tab-btn" onclick="switchTab('reports')">
+                📊 அறிக்கைகள்
+            </button>
+            <button class="tab-btn" onclick="switchTab('services')">
+                🔧 சேவைகள்
+            </button>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar no-print">
+                <div class="form-container active" id="customer-tab">
+                    <h2 style="color: #2c3e50; margin-top: 0;">புதிய வாடிக்கையாளர் பதிவு</h2>
+                    
+                    <div class="form-section">
+                        <form id="customer-form">
+                            <div class="form-group">
+                                <label for="customer-name" class="required">வாடிக்கையாளர் பெயர்</label>
+                                <input type="text" id="customer-name" placeholder="முழுப் பெயர்" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="customer-phone" class="required">செல் நம்பர்</label>
+                                <input type="tel" id="customer-phone" placeholder="98 43 23 23 24" pattern="[0-9]{10}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="customer-phone2">மாற்று செல் நம்பர்</label>
+                                <input type="tel" id="customer-phone2" placeholder="மாற்று தொடர்பு எண்">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="customer-address" class="required">முகவரி</label>
+                                <textarea id="customer-address" rows="3" placeholder="முழு முகவரி" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="customer-aadhar">ஆதார் எண்</label>
+                                <input type="text" id="customer-aadhar" placeholder="12 இலக்க ஆதார் எண்">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>பெற்ற சேவைகள்</label>
+                                <div class="service-checkboxes" id="services-list">
+                                    <!-- சேவைகள் இங்கே ஜாவாஸ்கிரிப்ட் மூலம் சேர்க்கப்படும் -->
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="total-amount">மொத்த தொகை (₹)</label>
+                                <input type="number" id="total-amount" placeholder="0" min="0" step="100">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="paid-amount">செலுத்திய தொகை (₹)</label>
+                                <input type="number" id="paid-amount" placeholder="0" min="0" step="100">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="customer-notes">குறிப்புகள்</label>
+                                <textarea id="customer-notes" rows="2" placeholder="கூடுதல் விவரங்கள்"></textarea>
+                            </div>
+                            
+                            <input type="hidden" id="customer-id">
+                            
+                            <div class="btn-group">
+                                <button type="submit" class="primary-btn" id="submit-btn">
+                                    💾 வாடிக்கையாளரை சேர்க்க
+                                </button>
+                                <button type="button" class="secondary-btn" id="update-btn" style="display:none;">
+                                    ✏️ புதுப்பிக்க
+                                </button>
+                                <button type="button" class="outline-btn" id="cancel-btn" style="display:none;">
+                                    ❌ ரத்து செய்க
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="form-container" id="payment-tab">
+                    <h2 style="color: #2c3e50; margin-top: 0;">கட்டணம் பதிவு செய்க</h2>
+                    
+                    <div class="form-section">
+                        <form id="payment-form">
+                            <div class="form-group">
+                                <label for="payment-customer" class="required">வாடிக்கையாளர்</label>
+                                <select id="payment-customer" required>
+                                    <option value="">வாடிக்கையாளரைத் தேர்ந்தெடுக்கவும்</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="payment-date" class="required">கட்டண தேதி</label>
+                                <input type="date" id="payment-date" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="payment-amount" class="required">கட்டண தொகை (₹)</label>
+                                <input type="number" id="payment-amount" placeholder="0" min="0" step="100" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="payment-mode">கட்டண முறை</label>
+                                <select id="payment-mode">
+                                    <option value="cash">பணம்</option>
+                                    <option value="online">ஆன்லைன்</option>
+                                    <option value="cheque">செக்</option>
+                                    <option value="upi">UPI</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="payment-reference">ரசீது எண் / குறிப்பு</label>
+                                <input type="text" id="payment-reference" placeholder="ரசீது எண் அல்லது குறிப்பு">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="payment-notes">குறிப்புகள்</label>
+                                <textarea id="payment-notes" rows="2" placeholder="கூடுதல் விவரங்கள்"></textarea>
+                            </div>
+                            
+                            <div class="btn-group">
+                                <button type="submit" class="primary-btn">
+                                    💰 கட்டணம் பதிவு செய்க
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div id="customer-balance-info" style="display: none;">
+                        <!-- வாடிக்கையாளர் பேலன்ஸ் தகவல் இங்கே காட்டப்படும் -->
+                    </div>
+                </div>
+                
+                <div class="services-container" id="services-tab">
+                    <h2 style="color: #2c3e50; margin-top: 0;">சேவை மேலாண்மை</h2>
+                    
+                    <div class="form-section">
+                        <h3>புதிய சேவை சேர்க்க</h3>
+                        <form id="service-form">
+                            <div class="form-group">
+                                <label for="service-name" class="required">சேவை பெயர்</label>
+                                <input type="text" id="service-name" placeholder="எ.கா: ஆதார் கார்டு, பாங்க் அக்கவுண்ட்" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="service-price">நிலையான கட்டணம் (₹)</label>
+                                <input type="number" id="service-price" placeholder="0" min="0" step="100">
+                            </div>
+                            
+                            <div class="btn-group">
+                                <button type="submit" class="primary-btn" id="service-submit-btn">
+                                    ➕ சேவையை சேர்க்க
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="form-section" style="margin-top: 30px;">
+                        <h3>சேவைகளின் பட்டியல்</h3>
+                        <div id="services-management">
+                            <!-- சேவைகள் பட்டியல் இங்கே காட்டப்படும் -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reports-container" id="reports-tab">
+                    <h2 style="color: #2c3e50; margin-top: 0;">அறிக்கைகள்</h2>
+                    
+                    <div class="form-section">
+                        <h3>அறிக்கை அளவுகோல்கள்</h3>
+                        
+                        <div class="form-group">
+                            <label for="report-type">அறிக்கை வகை</label>
+                            <select id="report-type">
+                                <option value="debtors">கடனாளிகள் அறிக்கை</option>
+                                <option value="payments">கட்டணங்கள் அறிக்கை</option>
+                                <option value="customers">வாடிக்கையாளர் அறிக்கை</option>
+                                <option value="services">சேவை வாரியான அறிக்கை</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>தேதி வரம்பு</label>
+                            <div style="display: flex; gap: 15px;">
+                                <input type="date" id="report-from" style="flex: 1;">
+                                <span style="align-self: center;">முதல்</span>
+                                <input type="date" id="report-to" style="flex: 1;">
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button class="primary-btn" onclick="generateReport()">
+                                📊 அறிக்கை உருவாக்குக
+                            </button>
+                            <button class="print-btn" onclick="printReport()">
+                                🖨️ அச்சிடுக
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="report-output" style="margin-top: 30px;">
+                        <!-- அறிக்கை இங்கே காட்டப்படும் -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <div id="customers-tab">
+                    <h2 style="color: #2c3e50; margin-top: 0;">
+                        வாடிக்கையாளர்கள் பட்டியல்
+                        <span style="float: right; color: #3498db; font-size: 16px;" id="customer-count">0 வாடிக்கையாளர்கள்</span>
+                    </h2>
+                    
+                    <div class="search-filter no-print">
+                        <input type="text" id="search" placeholder="🔍 பெயர், தொலைபேசி எண் அல்லது ஆதாரால் தேடுக...">
+                        <select id="filter-status">
+                            <option value="all">அனைத்தும்</option>
+                            <option value="active">செயலில்</option>
+                            <option value="debtors">கடனாளிகள்</option>
+                            <option value="cleared">முழுவதும் செலுத்தியவர்கள்</option>
+                        </select>
+                        <button class="outline-btn" onclick="clearFilters()" style="padding: 14px 28px;">
+                            தெரிவுகளை நீக்கு
+                        </button>
+                    </div>
+                    
+                    <div id="customers-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>குறியீடு</th>
+                                    <th>வாடிக்கையாளர்</th>
+                                    <th>தொடர்பு</th>
+                                    <th>சேவைகள்</th>
+                                    <th>மொத்த தொகை</th>
+                                    <th>செலுத்தியது</th>
+                                    <th>பேலன்ஸ்</th>
+                                    <th class="no-print">செயல்கள்</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customers-table-body">
+                                <!-- வாடிக்கையாளர்கள் இங்கே காட்டப்படும் -->
+                            </tbody>
+                        </table>
+                        <div id="no-data" class="no-data">
+                            <div class="no-data-icon">👤</div>
+                            <h3>வாடிக்கையாளர்கள் இல்லை</h3>
+                            <p>முதல் வாடிக்கையாளரைச் சேர்க்க தொடங்குக!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="no-print" style="margin-top: 40px; text-align: center;">
+                    <button class="print-btn" onclick="printCustomerList()">
+                        🖨️ வாடிக்கையாளர் பட்டியலை அச்சிடுக
+                    </button>
+                    <button class="warning-btn" onclick="exportData()" style="margin-left: 15px;">
+                        📥 தரவுகளை ஏற்றுமதி செய்க
+                    </button>
+                    <button class="secondary-btn" onclick="importData()" style="margin-left: 15px;">
+                        📤 தரவுகளை இறக்குமதி செய்க
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="no-print">
+            <p>© 2023 தாஸ் பொது சேவை மையம் - வாடிக்கையாளர் மேலாண்மை மென்பொருள் | தூத்துக்குடி</p>
+            <p>பதிப்புரிமை © தாஸ் பொது சேவை மையம் | dhasscsc@gmail.com</p>
+        </footer>
+    </div>
+
+    <!-- கட்டண வரலாறு மாடல் -->
+    <div class="modal" id="payment-history-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 40px; border-radius: 20px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #2c3e50;">கட்டண வரலாறு</h2>
+                <button onclick="closePaymentHistory()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #2c3e50;">×</button>
+            </div>
+            <div id="payment-history-content">
+                <!-- கட்டண வரலாறு இங்கே காட்டப்படும் -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // தரவு சேமிப்பு
+        let customers = JSON.parse(localStorage.getItem('dassCustomers')) || [];
+        let services = JSON.parse(localStorage.getItem('dassServices')) || [];
+        let payments = JSON.parse(localStorage.getItem('dassPayments')) || [];
+        let editCustomerId = null;
+        let editServiceId = null;
+
+        // மாதிரி சேவைகள் (முதல் முறை பயன்படுத்தும் போது)
+        if (services.length === 0) {
+            services = [
+                { id: 1, name: "ஆதார் கார்டு", price: 100 },
+                { id: 2, name: "பாங்க் அக்கவுண்ட்", price: 200 },
+                { id: 3, name: "பாஸ்போர்ட்", price: 1500 },
+                { id: 4, name: "பான் கார்டு", price: 100 },
+                { id: 5, name: "வாகன லைசென்ஸ்", price: 500 },
+                { id: 6, name: "வாகன பதிவு", price: 1000 },
+                { id: 7, name: "ரேஷன் கார்டு", price: 50 },
+                { id: 8, name: "குடும்ப அட்டை", price: 100 },
+                { id: 9, name: "சம்பள சான்றிதழ்", price: 200 },
+                { id: 10, name: "வாக்காளர் அட்டை", price: 50 }
+            ];
+            saveServices();
+        }
+
+        // DOM உறுப்புகள்
+        const customerForm = document.getElementById('customer-form');
+        const paymentForm = document.getElementById('payment-form');
+        const serviceForm = document.getElementById('service-form');
+        const serviceSubmitBtn = document.getElementById('service-submit-btn');
+        const servicesList = document.getElementById('services-list');
+        const paymentCustomerSelect = document.getElementById('payment-customer');
+        const customersTableBody = document.getElementById('customers-table-body');
+        const noDataElement = document.getElementById('no-data');
+        const searchInput = document.getElementById('search');
+        const filterStatusSelect = document.getElementById('filter-status');
+
+        // தொடக்கத்தில் அமைக்க
+        document.getElementById('payment-date').valueAsDate = new Date();
+        updateDashboard();
+        renderCustomers();
+        renderServicesCheckboxes();
+        updatePaymentCustomerSelect();
+
+        // வாடிக்கையாளர் படிவம்
+        customerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const selectedServices = Array.from(document.querySelectorAll('#services-list input[type="checkbox"]:checked'))
+                .map(checkbox => checkbox.value);
+            
+            const totalAmount = parseInt(document.getElementById('total-amount').value) || 0;
+            const paidAmount = parseInt(document.getElementById('paid-amount').value) || 0;
+            const balanceAmount = totalAmount - paidAmount;
+            
+            const customer = {
+                id: editCustomerId ? editCustomerId : 'DASS' + Date.now().toString().slice(-6),
+                name: document.getElementById('customer-name').value,
+                phone: document.getElementById('customer-phone').value,
+                phone2: document.getElementById('customer-phone2').value,
+                address: document.getElementById('customer-address').value,
+                aadhar: document.getElementById('customer-aadhar').value,
+                services: selectedServices,
+                totalAmount: totalAmount,
+                paidAmount: paidAmount,
+                balanceAmount: balanceAmount,
+                notes: document.getElementById('customer-notes').value,
+                status: balanceAmount > 0 ? 'debtor' : 'cleared',
+                registrationDate: new Date().toISOString().split('T')[0],
+                lastPaymentDate: paidAmount > 0 ? new Date().toISOString().split('T')[0] : null
+            };
+            
+            if (editCustomerId) {
+                // புதுப்பிக்க
+                const index = customers.findIndex(c => c.id === editCustomerId);
+                if (index !== -1) customers[index] = customer;
+                editCustomerId = null;
+                document.getElementById('submit-btn').style.display = 'block';
+                document.getElementById('update-btn').style.display = 'none';
+                document.getElementById('cancel-btn').style.display = 'none';
+            } else {
+                // புதிய வாடிக்கையாளர்
+                customers.unshift(customer);
+            }
+            
+            saveCustomers();
+            renderCustomers();
+            updateDashboard();
+            updatePaymentCustomerSelect();
+            resetCustomerForm();
+            
+            alert(editCustomerId ? 'வாடிக்கையாளர் தகவல்கள் புதுப்பிக்கப்பட்டன!' : 'வாடிக்கையாளர் வெற்றிகரமாக சேர்க்கப்பட்டார்!');
+        });
+
+        // கட்டண படிவம்
+        paymentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const customerId = document.getElementById('payment-customer').value;
+            const customer = customers.find(c => c.id === customerId);
+            
+            if (!customer) {
+                alert('வாடிக்கையாளர் தகவல் கிடைக்கவில்லை!');
+                return;
+            }
+            
+            const payment = {
+                id: 'PAY' + Date.now().toString().slice(-6),
+                customerId: customerId,
+                customerName: customer.name,
+                date: document.getElementById('payment-date').value,
+                amount: parseInt(document.getElementById('payment-amount').value) || 0,
+                mode: document.getElementById('payment-mode').value,
+                reference: document.getElementById('payment-reference').value,
+                notes: document.getElementById('payment-notes').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // வாடிக்கையாளர் பேலன்ஸ் புதுப்பிக்க
+            customer.paidAmount += payment.amount;
+            customer.balanceAmount = customer.totalAmount - customer.paidAmount;
+            customer.status = customer.balanceAmount > 0 ? 'debtor' : 'cleared';
+            customer.lastPaymentDate = payment.date;
+            
+            payments.unshift(payment);
+            
+            saveCustomers();
+            savePayments();
+            renderCustomers();
+            updateDashboard();
+            updatePaymentCustomerSelect();
+            resetPaymentForm();
+            
+            // பேலன்ஸ் தகவல் புதுப்பிக்க
+            showCustomerBalance(customerId);
+            
+            alert('கட்டணம் வெற்றிகரமாக பதிவு செய்யப்பட்டது!');
+        });
+
+        // சேவை படிவம்
+        serviceForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (editServiceId) {
+                // சேவையை புதுப்பிக்க
+                updateService(editServiceId);
+            } else {
+                // புதிய சேவை சேர்க்க
+                addNewService();
+            }
+        });
+
+        // புதிய சேவை சேர்க்க
+        function addNewService() {
+            const service = {
+                id: Date.now(),
+                name: document.getElementById('service-name').value,
+                price: parseInt(document.getElementById('service-price').value) || 0
+            };
+            
+            services.push(service);
+            saveServices();
+            renderServicesCheckboxes();
+            renderServicesManagement();
+            resetServiceForm();
+            
+            alert('சேவை வெற்றிகரமாக சேர்க்கப்பட்டது!');
+        }
+
+        // வாடிக்கையாளர்களை காட்டு
+        function renderCustomers(filter = '', statusFilter = 'all') {
+            let filteredCustomers = customers;
+            
+            // தேடல் வடிகட்டல்
+            if (filter) {
+                const searchTerm = filter.toLowerCase();
+                filteredCustomers = filteredCustomers.filter(c => 
+                    c.name.toLowerCase().includes(searchTerm) ||
+                    c.phone.includes(searchTerm) ||
+                    c.aadhar.includes(searchTerm) ||
+                    c.id.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // நிலை வடிகட்டல்
+            if (statusFilter !== 'all') {
+                if (statusFilter === 'debtors') {
+                    filteredCustomers = filteredCustomers.filter(c => c.balanceAmount > 0);
+                } else if (statusFilter === 'cleared') {
+                    filteredCustomers = filteredCustomers.filter(c => c.balanceAmount <= 0);
+                } else if (statusFilter === 'active') {
+                    filteredCustomers = filteredCustomers.filter(c => c.services.length > 0);
+                }
+            }
+            
+            if (filteredCustomers.length === 0) {
+                customersTableBody.innerHTML = '';
+                noDataElement.style.display = 'block';
+                document.getElementById('customer-count').textContent = '0 வாடிக்கையாளர்கள்';
+                return;
+            }
+            
+            noDataElement.style.display = 'none';
+            document.getElementById('customer-count').textContent = `${filteredCustomers.length} வாடிக்கையாளர்கள்`;
+            
+            let tableHTML = '';
+            
+            filteredCustomers.forEach(customer => {
+                const serviceTags = customer.services.slice(0, 3).map(service => 
+                    `<span class="service-tag">${service}</span>`
+                ).join('');
+                
+                const moreServices = customer.services.length > 3 ? 
+                    `<span class="service-tag">+${customer.services.length - 3} மேலும்</span>` : '';
+                
+                const debtClass = customer.balanceAmount > 10000 ? 'debt-high' : 
+                                 customer.balanceAmount > 0 ? 'debt-medium' : '';
+                
+                tableHTML += `
+                <tr class="${debtClass}">
+                    <td>
+                        <span class="customer-id">${customer.id}</span><br>
+                        <small style="color: #6c757d;">${formatDate(customer.registrationDate)}</small>
+                    </td>
+                    <td>
+                        <div class="customer-name">${customer.name}</div>
+                        <small style="color: #6c757d;">${customer.address.split(',')[0]}</small>
+                        ${customer.aadhar ? `<br><small style="color: #6c757d;">ஆதார்: ${customer.aadhar}</small>` : ''}
+                    </td>
+                    <td>
+                        <div class="customer-phone">${customer.phone}</div>
+                        ${customer.phone2 ? `<div style="color: #6c757d; font-size: 13px;">${customer.phone2}</div>` : ''}
+                    </td>
+                    <td>
+                        <div class="service-tags">
+                            ${serviceTags}${moreServices}
+                        </div>
+                    </td>
+                    <td>
+                        <strong>₹${customer.totalAmount.toLocaleString('en-IN')}</strong>
+                    </td>
+                    <td>
+                        <span class="paid-amount">₹${customer.paidAmount.toLocaleString('en-IN')}</span>
+                    </td>
+                    <td>
+                        <span class="${customer.balanceAmount > 0 ? 'debt-amount' : 'paid-amount'}">
+                            ₹${customer.balanceAmount.toLocaleString('en-IN')}
+                        </span>
+                    </td>
+                    <td class="no-print">
+                        <div class="action-buttons">
+                            <button class="small-btn outline-btn" onclick="viewCustomer('${customer.id}')">
+                                👁️
+                            </button>
+                            <button class="small-btn outline-btn" onclick="editCustomer('${customer.id}')">
+                                ✏️
+                            </button>
+                            <button class="small-btn outline-btn" onclick="viewPaymentHistory('${customer.id}')" title="கட்டண வரலாறு">
+                                💰
+                            </button>
+                            <button class="small-btn danger-btn" onclick="deleteCustomer('${customer.id}')">
+                                🗑️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                `;
+            });
+            
+            customersTableBody.innerHTML = tableHTML;
+        }
+
+        // வாடிக்கையாளரை பார்
+        function viewCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+            
+            const customerPayments = payments.filter(p => p.customerId === id);
+            const totalPaid = customerPayments.reduce((sum, p) => sum + p.amount, 0);
+            
+            let detailsHTML = `
+                <div class="report-card">
+                    <h3 style="color: #2c3e50; margin-top: 0;">வாடிக்கையாளர் விவரங்கள்</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <p><strong>குறியீடு:</strong> ${customer.id}</p>
+                            <p><strong>பெயர்:</strong> ${customer.name}</p>
+                            <p><strong>முதன்மை தொலைபேசி:</strong> ${customer.phone}</p>
+                            ${customer.phone2 ? `<p><strong>மாற்று தொலைபேசி:</strong> ${customer.phone2}</p>` : ''}
+                            ${customer.aadhar ? `<p><strong>ஆதார் எண்:</strong> ${customer.aadhar}</p>` : ''}
+                        </div>
+                        <div>
+                            <p><strong>பதிவு தேதி:</strong> ${formatDate(customer.registrationDate)}</p>
+                            <p><strong>கடைசி கட்டண தேதி:</strong> ${customer.lastPaymentDate ? formatDate(customer.lastPaymentDate) : 'இல்லை'}</p>
+                            <p><strong>நிலை:</strong> <span class="status-badge ${customer.status === 'cleared' ? 'status-active' : 'status-pending'}">${customer.status === 'cleared' ? 'முழுவதும் செலுத்தியது' : 'கடனாளி'}</span></p>
+                        </div>
+                    </div>
+                    
+                    <p><strong>முகவரி:</strong><br>${customer.address}</p>
+                    
+                    <div style="margin-top: 20px;">
+                        <h4>சேவைகள்:</h4>
+                        <div class="service-tags">
+                            ${customer.services.map(service => `<span class="service-tag">${service}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 25px; text-align: center;">
+                        <div style="padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                            <div style="font-size: 14px; color: #6c757d;">மொத்த தொகை</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #2c3e50;">₹${customer.totalAmount.toLocaleString('en-IN')}</div>
+                        </div>
+                        <div style="padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                            <div style="font-size: 14px; color: #6c757d;">செலுத்தியது</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #27ae60;">₹${customer.paidAmount.toLocaleString('en-IN')}</div>
+                        </div>
+                        <div style="padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                            <div style="font-size: 14px; color: #6c757d;">பேலன்ஸ்</div>
+                            <div style="font-size: 24px; font-weight: 700; color: ${customer.balanceAmount > 0 ? '#e74c3c' : '#27ae60'};">₹${customer.balanceAmount.toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
+                    
+                    ${customer.notes ? `<p style="margin-top: 20px;"><strong>குறிப்புகள்:</strong> ${customer.notes}</p>` : ''}
+                    
+                    <div style="margin-top: 30px;">
+                        <h4>கட்டண வரலாறு (${customerPayments.length} பதிவுகள்):</h4>
+                        ${customerPayments.length > 0 ? `
+                            <div class="payment-history">
+                                ${customerPayments.map(payment => `
+                                    <div class="payment-item">
+                                        <div>
+                                            <strong>${formatDate(payment.date)}</strong><br>
+                                            <small>${payment.mode} | ${payment.reference || 'ரசீது இல்லை'}</small>
+                                        </div>
+                                        <div style="color: #27ae60; font-weight: 700;">₹${payment.amount.toLocaleString('en-IN')}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : '<p>கட்டண வரலாறு இல்லை</p>'}
+                    </div>
+                    
+                    <div style="margin-top: 30px; text-align: center;">
+                        <button class="primary-btn" onclick="editCustomer('${customer.id}')">
+                            ✏️ இந்த வாடிக்கையாளரை திருத்து
+                        </button>
+                        <button class="outline-btn" onclick="addPaymentForCustomer('${customer.id}')" style="margin-left: 15px;">
+                            💰 இந்த வாடிக்கையாளருக்கு கட்டணம் சேர்க்க
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // மாடல் காட்ட
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 40px; border-radius: 20px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="margin: 0; color: #2c3e50;">வாடிக்கையாளர் விவரங்கள்</h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #2c3e50;">×</button>
+                    </div>
+                    ${detailsHTML}
+                    <div style="margin-top: 30px; text-align: center;">
+                        <button class="print-btn" onclick="printCustomerDetails('${customer.id}')">
+                            🖨️ இந்த விவரங்களை அச்சிடுக
+                        </button>
+                        <button class="outline-btn" onclick="this.parentElement.parentElement.parentElement.remove()" style="margin-left: 15px;">
+                            மூடுக
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // வாடிக்கையாளரை திருத்து
+        function editCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+            
+            document.getElementById('customer-name').value = customer.name;
+            document.getElementById('customer-phone').value = customer.phone;
+            document.getElementById('customer-phone2').value = customer.phone2 || '';
+            document.getElementById('customer-address').value = customer.address;
+            document.getElementById('customer-aadhar').value = customer.aadhar || '';
+            document.getElementById('total-amount').value = customer.totalAmount;
+            document.getElementById('paid-amount').value = customer.paidAmount;
+            document.getElementById('customer-notes').value = customer.notes || '';
+            document.getElementById('customer-id').value = customer.id;
+            
+            // சேவைகளை தேர்ந்தெடுக்க
+            document.querySelectorAll('#services-list input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = customer.services.includes(checkbox.value);
+            });
+            
+            editCustomerId = customer.id;
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('update-btn').style.display = 'block';
+            document.getElementById('cancel-btn').style.display = 'block';
+            
+            // வாடிக்கையாளர் தாவலுக்கு செல்
+            switchTab('customer');
+            document.querySelector('.sidebar').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // வாடிக்கையாளருக்கு கட்டணம் சேர்க்க
+        function addPaymentForCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+            
+            // மாடலை மூடு
+            document.querySelectorAll('div[style*="position: fixed; top: 0; left: 0; width: 100%"]').forEach(modal => modal.remove());
+            
+            // கட்டண தாவலுக்கு செல்
+            switchTab('payment');
+            document.getElementById('payment-customer').value = id;
+            document.getElementById('payment-amount').focus();
+            
+            // பேலன்ஸ் தகவல் காட்ட
+            showCustomerBalance(id);
+        }
+
+        // வாடிக்கையாளரை நீக்கு
+        function deleteCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+            
+            const customerPayments = payments.filter(p => p.customerId === id);
+            
+            let message = `வாடிக்கையாளர் "${customer.name}" (${customer.id}) ஐ நிச்சயமாக நீக்க விரும்புகிறீர்களா?`;
+            
+            if (customerPayments.length > 0) {
+                message += `\n\nகவனிக்க: இந்த வாடிக்கையாளருக்கு ${customerPayments.length} கட்டண பதிவுகள் உள்ளன. அவையும் நீக்கப்படும்.`;
+            }
+            
+            if (!confirm(message)) return;
+            
+            // வாடிக்கையாளர் மற்றும் கட்டணங்களை நீக்கு
+            customers = customers.filter(c => c.id !== id);
+            payments = payments.filter(p => p.customerId !== id);
+            
+            saveCustomers();
+            savePayments();
+            renderCustomers();
+            updateDashboard();
+            updatePaymentCustomerSelect();
+            
+            alert('வாடிக்கையாளர் வெற்றிகரமாக நீக்கப்பட்டார்!');
+        }
+
+        // கட்டண வரலாறு காட்டு
+        function viewPaymentHistory(id) {
+            const customer = customers.find(c => c.id === id);
+            const customerPayments = payments.filter(p => p.customerId === id).sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            if (!customer) return;
+            
+            let historyHTML = `
+                <h3 style="color: #2c3e50;">${customer.name} - கட்டண வரலாறு</h3>
+                <p><strong>குறியீடு:</strong> ${customer.id} | <strong>பேலன்ஸ்:</strong> ₹${customer.balanceAmount.toLocaleString('en-IN')}</p>
+                
+                ${customerPayments.length > 0 ? `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>தேதி</th>
+                                <th>ரசீது</th>
+                                <th>முறை</th>
+                                <th>தொகை</th>
+                                <th>குறிப்புகள்</th>
+                                <th class="no-print">செயல்கள்</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${customerPayments.map(payment => `
+                                <tr>
+                                    <td>${formatDate(payment.date)}</td>
+                                    <td>${payment.reference || '-'}</td>
+                                    <td>${getPaymentModeText(payment.mode)}</td>
+                                    <td style="color: #27ae60; font-weight: 700;">₹${payment.amount.toLocaleString('en-IN')}</td>
+                                    <td>${payment.notes || '-'}</td>
+                                    <td class="no-print">
+                                        <div class="action-buttons">
+                                            <button class="small-btn outline-btn" onclick="editPayment('${payment.id}')" title="கட்டணத்தை திருத்து">
+                                                ✏️
+                                            </button>
+                                            <button class="small-btn danger-btn" onclick="deletePayment('${payment.id}', '${customer.id}')" title="கட்டணத்தை நீக்கு">
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 20px; text-align: right; font-weight: 700;">
+                        மொத்த கட்டணம்: ₹${customerPayments.reduce((sum, p) => sum + p.amount, 0).toLocaleString('en-IN')}
+                    </p>
+                ` : '<div class="no-data"><p>கட்டண வரலாறு இல்லை</p></div>'}
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <button class="primary-btn" onclick="addPaymentForCustomer('${id}'); closePaymentHistory()">
+                        💰 புதிய கட்டணம் சேர்க்க
+                    </button>
+                    <button class="outline-btn" onclick="closePaymentHistory()" style="margin-left: 15px;">
+                        மூடுக
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('payment-history-content').innerHTML = historyHTML;
+            document.getElementById('payment-history-modal').style.display = 'flex';
+        }
+
+        // கட்டண வரலாறு மூடு
+        function closePaymentHistory() {
+            document.getElementById('payment-history-modal').style.display = 'none';
+        }
+
+        // கட்டணத்தை திருத்து
+        function editPayment(paymentId) {
+            const payment = payments.find(p => p.id === paymentId);
+            if (!payment) return;
+            
+            const customer = customers.find(c => c.id === payment.customerId);
+            if (!customer) return;
+            
+            // கட்டண திருத்தம் படிவம்
+            const editPaymentHTML = `
+                <div style="background: #f8f9fa; padding: 30px; border-radius: 15px; margin-top: 20px; border: 2px solid #dee2e6;">
+                    <h4 style="margin-top: 0; color: #2c3e50;">கட்டணத்தை திருத்துக</h4>
+                    <form id="edit-payment-form">
+                        <input type="hidden" id="edit-payment-id" value="${payment.id}">
+                        <input type="hidden" id="edit-customer-id" value="${customer.id}">
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <div>
+                                <p><strong>வாடிக்கையாளர்:</strong> ${customer.name}</p>
+                                <p><strong>முந்தைய தொகை:</strong> ₹${payment.amount.toLocaleString('en-IN')}</p>
+                            </div>
+                            <div>
+                                <p><strong>மொத்த தொகை:</strong> ₹${customer.totalAmount.toLocaleString('en-IN')}</p>
+                                <p><strong>தற்போதைய பேலன்ஸ்:</strong> ₹${customer.balanceAmount.toLocaleString('en-IN')}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-payment-date" class="required">கட்டண தேதி</label>
+                            <input type="date" id="edit-payment-date" value="${payment.date}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-payment-amount" class="required">கட்டண தொகை (₹)</label>
+                            <input type="number" id="edit-payment-amount" value="${payment.amount}" min="0" step="100" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-payment-mode">கட்டண முறை</label>
+                            <select id="edit-payment-mode">
+                                <option value="cash" ${payment.mode === 'cash' ? 'selected' : ''}>பணம்</option>
+                                <option value="online" ${payment.mode === 'online' ? 'selected' : ''}>ஆன்லைன்</option>
+                                <option value="cheque" ${payment.mode === 'cheque' ? 'selected' : ''}>செக்</option>
+                                <option value="upi" ${payment.mode === 'upi' ? 'selected' : ''}>UPI</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-payment-reference">ரசீது எண் / குறிப்பு</label>
+                            <input type="text" id="edit-payment-reference" value="${payment.reference || ''}" placeholder="ரசீது எண் அல்லது குறிப்பு">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-payment-notes">குறிப்புகள்</label>
+                            <textarea id="edit-payment-notes" rows="2" placeholder="கூடுதல் விவரங்கள்">${payment.notes || ''}</textarea>
+                        </div>
+                        
+                        <div class="btn-group" style="margin-top: 20px;">
+                            <button type="button" class="primary-btn" onclick="updatePayment()">
+                                💾 கட்டணத்தை புதுப்பிக்க
+                            </button>
+                            <button type="button" class="outline-btn" onclick="cancelEditPayment()">
+                                ❌ ரத்து செய்க
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            // மாடலில் கட்டண திருத்தம் படிவத்தை காட்டு
+            document.getElementById('payment-history-content').innerHTML = editPaymentHTML;
+        }
+
+        // கட்டணத்தை புதுப்பிக்க
+        function updatePayment() {
+            const paymentId = document.getElementById('edit-payment-id').value;
+            const customerId = document.getElementById('edit-customer-id').value;
+            
+            const payment = payments.find(p => p.id === paymentId);
+            const customer = customers.find(c => c.id === customerId);
+            
+            if (!payment || !customer) {
+                alert('தரவு கிடைக்கவில்லை!');
+                return;
+            }
+            
+            const oldAmount = payment.amount;
+            const newAmount = parseInt(document.getElementById('edit-payment-amount').value) || 0;
+            const difference = newAmount - oldAmount;
+            
+            // கட்டண விவரங்களை புதுப்பிக்கவும்
+            payment.date = document.getElementById('edit-payment-date').value;
+            payment.amount = newAmount;
+            payment.mode = document.getElementById('edit-payment-mode').value;
+            payment.reference = document.getElementById('edit-payment-reference').value;
+            payment.notes = document.getElementById('edit-payment-notes').value;
+            
+            // வாடிக்கையாளர் பேலன்ஸை புதுப்பிக்கவும்
+            customer.paidAmount += difference;
+            customer.balanceAmount = customer.totalAmount - customer.paidAmount;
+            customer.status = customer.balanceAmount > 0 ? 'debtor' : 'cleared';
+            customer.lastPaymentDate = payment.date;
+            
+            // தரவுகளை சேமிக்கவும்
+            saveCustomers();
+            savePayments();
+            
+            // கட்டண வரலாற்றை மீண்டும் காட்டு
+            viewPaymentHistory(customerId);
+            
+            alert('கட்டணம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது!');
+        }
+
+        // கட்டண திருத்தத்தை ரத்து செய்
+        function cancelEditPayment() {
+            const customerId = document.getElementById('edit-customer-id').value;
+            viewPaymentHistory(customerId);
+        }
+
+        // கட்டணத்தை நீக்கு
+        function deletePayment(paymentId, customerId) {
+            const payment = payments.find(p => p.id === paymentId);
+            if (!payment) return;
+            
+            const customer = customers.find(c => c.id === customerId);
+            if (!customer) return;
+            
+            const confirmMsg = `ரசீது: ${payment.reference || 'இல்லை'}\nதொகை: ₹${payment.amount.toLocaleString('en-IN')}\nதேதி: ${formatDate(payment.date)}\n\nஇந்த கட்டணத்தை நிச்சயமாக நீக்க விரும்புகிறீர்களா?`;
+            
+            if (!confirm(confirmMsg)) return;
+            
+            // வாடிக்கையாளர் பேலன்ஸை புதுப்பிக்கவும்
+            customer.paidAmount -= payment.amount;
+            customer.balanceAmount = customer.totalAmount - customer.paidAmount;
+            customer.status = customer.balanceAmount > 0 ? 'debtor' : 'cleared';
+            
+            // கட்டணத்தை நீக்கவும்
+            payments = payments.filter(p => p.id !== paymentId);
+            
+            // தரவுகளை சேமிக்கவும்
+            saveCustomers();
+            savePayments();
+            
+            // கட்டண வரலாற்றை மீண்டும் காட்டு
+            viewPaymentHistory(customerId);
+            
+            // டாஷ்போர்டை புதுப்பிக்கவும்
+            updateDashboard();
+            
+            alert('கட்டணம் நீக்கப்பட்டது!');
+        }
+
+        // வாடிக்கையாளர் பேலன்ஸ் தகவல் காட்டு
+        function showCustomerBalance(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+            
+            const balanceInfo = document.getElementById('customer-balance-info');
+            balanceInfo.style.display = 'block';
+            balanceInfo.innerHTML = `
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 5px solid #2196f3;">
+                    <h4 style="margin-top: 0; color: #1565c0;">வாடிக்கையாளர் பேலன்ஸ்</h4>
+                    <p><strong>பெயர்:</strong> ${customer.name}</p>
+                    <p><strong>மொத்த தொகை:</strong> ₹${customer.totalAmount.toLocaleString('en-IN')}</p>
+                    <p><strong>செலுத்தியது:</strong> ₹${customer.paidAmount.toLocaleString('en-IN')}</p>
+                    <p><strong>பேலன்ஸ்:</strong> <span style="color: ${customer.balanceAmount > 0 ? '#e74c3c' : '#27ae60'}; font-weight: 700;">₹${customer.balanceAmount.toLocaleString('en-IN')}</span></p>
+                </div>
+            `;
+            
+            // கட்டண தொகை புலத்தில் பேலன்ஸை அமைக்க
+            if (customer.balanceAmount > 0) {
+                document.getElementById('payment-amount').value = customer.balanceAmount;
+            }
+        }
+
+        // சேவைகளை காட்டு (checkbox)
+        function renderServicesCheckboxes() {
+            let servicesHTML = '';
+            
+            services.forEach(service => {
+                servicesHTML += `
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="service-${service.id}" value="${service.name}">
+                        <label for="service-${service.id}">${service.name} (₹${service.price})</label>
+                    </div>
+                `;
+            });
+            
+            servicesList.innerHTML = servicesHTML;
+        }
+
+        // சேவை மேலாண்மை
+        function renderServicesManagement() {
+            const servicesManagement = document.getElementById('services-management');
+            
+            if (services.length === 0) {
+                servicesManagement.innerHTML = '<p>சேவைகள் இல்லை</p>';
+                return;
+            }
+            
+            let servicesHTML = '<table style="width: 100%;"><thead><tr><th>சேவை</th><th>கட்டணம்</th><th class="no-print">செயல்கள்</th></tr></thead><tbody>';
+            
+            services.forEach(service => {
+                const usageCount = customers.filter(c => c.services.includes(service.name)).length;
+                
+                servicesHTML += `
+                    <tr>
+                        <td>
+                            <strong>${service.name}</strong>
+                            ${usageCount > 0 ? `<br><small style="color: #6c757d;">${usageCount} வாடிக்கையாளர்கள்</small>` : ''}
+                        </td>
+                        <td>₹${service.price.toLocaleString('en-IN')}</td>
+                        <td class="no-print">
+                            <button class="small-btn outline-btn" onclick="editService(${service.id})">
+                                ✏️
+                            </button>
+                            <button class="small-btn danger-btn" onclick="deleteService(${service.id})" ${usageCount > 0 ? 'disabled title="இந்த சேவை பயன்பாட்டில் உள்ளது"' : ''}>
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            servicesHTML += '</tbody></table>';
+            servicesManagement.innerHTML = servicesHTML;
+        }
+
+        // சேவை திருத்து
+        function editService(id) {
+            const service = services.find(s => s.id === id);
+            if (!service) return;
+            
+            // சேவை படிவத்தில் தற்போதைய மதிப்புகளை நிரப்பு
+            document.getElementById('service-name').value = service.name;
+            document.getElementById('service-price').value = service.price;
+            
+            // புதுப்பிப்பு பொத்தானுக்கு மாற்று
+            serviceSubmitBtn.innerHTML = '✏️ சேவையை புதுப்பிக்க';
+            editServiceId = id;
+            
+            // "சேவைகள்" தாவலுக்கு செல்
+            switchTab('services');
+            document.querySelector('.sidebar').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // சேவை புதுப்பிப்பு
+        function updateService(id) {
+            const service = services.find(s => s.id === id);
+            if (!service) return;
+            
+            const oldName = service.name;
+            const newName = document.getElementById('service-name').value;
+            const newPrice = parseInt(document.getElementById('service-price').value) || 0;
+            
+            // சேவை பெயர் மாற்றப்பட்டால், அனைத்து வாடிக்கையாளர்களின் சேவை பட்டியலையும் புதுப்பிக்கவும்
+            if (oldName !== newName) {
+                customers.forEach(customer => {
+                    if (customer.services.includes(oldName)) {
+                        customer.services = customer.services.map(s => s === oldName ? newName : s);
+                    }
+                });
+                saveCustomers();
+            }
+            
+            // சேவை விவரங்களை புதுப்பிக்கவும்
+            service.name = newName;
+            service.price = newPrice;
+            
+            saveServices();
+            renderServicesCheckboxes();
+            renderServicesManagement();
+            resetServiceForm();
+            renderCustomers(); // வாடிக்கையாளர் பட்டியலை புதுப்பிக்கவும்
+            
+            editServiceId = null;
+            
+            alert('சேவை வெற்றிகரமாக புதுப்பிக்கப்பட்டது!');
+        }
+
+        // சேவை நீக்கு
+        function deleteService(id) {
+            const service = services.find(s => s.id === id);
+            if (!service) return;
+            
+            const usageCount = customers.filter(c => c.services.includes(service.name)).length;
+            
+            if (usageCount > 0) {
+                alert(`இந்த சேவை ${usageCount} வாடிக்கையாளர்களால் பயன்படுத்தப்படுகிறது. முதலில் அந்த வாடிக்கையாளர்களிடம் இருந்து இந்த சேவையை நீக்கவும்.`);
+                return;
+            }
+            
+            if (!confirm(`"${service.name}" சேவையை நிச்சயமாக நீக்க விரும்புகிறீர்களா?`)) return;
+            
+            services = services.filter(s => s.id !== id);
+            saveServices();
+            renderServicesCheckboxes();
+            renderServicesManagement();
+            
+            alert('சேவை நீக்கப்பட்டது!');
+        }
+
+        // அறிக்கை உருவாக்கு
+        function generateReport() {
+            const reportType = document.getElementById('report-type').value;
+            const fromDate = document.getElementById('report-from').value;
+            const toDate = document.getElementById('report-to').value;
+            
+            let reportHTML = '';
+            
+            if (reportType === 'debtors') {
+                // கடனாளிகள் அறிக்கை
+                const debtors = customers.filter(c => c.balanceAmount > 0);
+                
+                if (debtors.length === 0) {
+                    reportHTML = '<div class="no-data"><p>கடனாளிகள் இல்லை</p></div>';
+                } else {
+                    let debtorsHTML = '<table><thead><tr><th>வாடிக்கையாளர்</th><th>தொலைபேசி</th><th>மொத்த தொகை</th><th>செலுத்தியது</th><th>பேலன்ஸ்</th><th>கடைசி கட்டணம்</th></tr></thead><tbody>';
+                    
+                    debtors.sort((a, b) => b.balanceAmount - a.balanceAmount);
+                    
+                    debtors.forEach(customer => {
+                        debtorsHTML += `
+                            <tr>
+                                <td>
+                                    <strong>${customer.name}</strong><br>
+                                    <small>${customer.id}</small>
+                                </td>
+                                <td>${customer.phone}</td>
+                                <td>₹${customer.totalAmount.toLocaleString('en-IN')}</td>
+                                <td>₹${customer.paidAmount.toLocaleString('en-IN')}</td>
+                                <td style="color: #e74c3c; font-weight: 700;">₹${customer.balanceAmount.toLocaleString('en-IN')}</td>
+                                <td>${customer.lastPaymentDate ? formatDate(customer.lastPaymentDate) : 'இல்லை'}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    debtorsHTML += '</tbody></table>';
+                    
+                    const totalDebt = debtors.reduce((sum, c) => sum + c.balanceAmount, 0);
+                    
+                    reportHTML = `
+                        <div class="report-card">
+                            <h3 style="color: #e74c3c;">கடனாளிகள் அறிக்கை</h3>
+                            <p>மொத்த கடனாளிகள்: ${debtors.length} | மொத்த கடன் தொகை: ₹${totalDebt.toLocaleString('en-IN')}</p>
+                            ${debtorsHTML}
+                        </div>
+                    `;
+                }
+            } else if (reportType === 'payments') {
+                // கட்டணங்கள் அறிக்கை
+                let filteredPayments = payments;
+                
+                if (fromDate) {
+                    filteredPayments = filteredPayments.filter(p => p.date >= fromDate);
+                }
+                if (toDate) {
+                    filteredPayments = filteredPayments.filter(p => p.date <= toDate);
+                }
+                
+                if (filteredPayments.length === 0) {
+                    reportHTML = '<div class="no-data"><p>கட்டண பதிவுகள் இல்லை</p></div>';
+                } else {
+                    let paymentsHTML = '<table><thead><tr><th>தேதி</th><th>வாடிக்கையாளர்</th><th>ரசீது</th><th>முறை</th><th>தொகை</th></tr></thead><tbody>';
+                    
+                    filteredPayments.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    
+                    filteredPayments.forEach(payment => {
+                        paymentsHTML += `
+                            <tr>
+                                <td>${formatDate(payment.date)}</td>
+                                <td>${payment.customerName}</td>
+                                <td>${payment.reference || '-'}</td>
+                                <td>${getPaymentModeText(payment.mode)}</td>
+                                <td style="color: #27ae60; font-weight: 700;">₹${payment.amount.toLocaleString('en-IN')}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    paymentsHTML += '</tbody></table>';
+                    
+                    const totalPayments = filteredPayments.reduce((sum, p) => sum + p.amount, 0);
+                    
+                    reportHTML = `
+                        <div class="report-card">
+                            <h3>கட்டணங்கள் அறிக்கை</h3>
+                            <p>மொத்த கட்டணங்கள்: ${filteredPayments.length} | மொத்த தொகை: ₹${totalPayments.toLocaleString('en-IN')}</p>
+                            ${paymentsHTML}
+                        </div>
+                    `;
+                }
+            } else if (reportType === 'services') {
+                // சேவை வாரியான அறிக்கை
+                let serviceStats = {};
+                
+                customers.forEach(customer => {
+                    customer.services.forEach(serviceName => {
+                        if (!serviceStats[serviceName]) {
+                            serviceStats[serviceName] = {
+                                count: 0,
+                                revenue: 0
+                            };
+                        }
+                        serviceStats[serviceName].count++;
+                        
+                        // சேவைக்கான சராசரி கட்டணம் (மதிப்பீடு)
+                        const service = services.find(s => s.name === serviceName);
+                        if (service) {
+                            serviceStats[serviceName].revenue += service.price;
+                        }
+                    });
+                });
+                
+                if (Object.keys(serviceStats).length === 0) {
+                    reportHTML = '<div class="no-data"><p>சேவை பயன்பாடு தரவுகள் இல்லை</p></div>';
+                } else {
+                    let servicesHTML = '<table><thead><tr><th>சேவை</th><th>வாடிக்கையாளர்கள்</th><th>மதிப்பிடப்பட்ட வருவாய்</th><th>சதவீதம்</th></tr></thead><tbody>';
+                    
+                    Object.keys(serviceStats).sort((a, b) => serviceStats[b].count - serviceStats[a].count).forEach(serviceName => {
+                        const stats = serviceStats[serviceName];
+                        const percentage = ((stats.count / customers.length) * 100).toFixed(1);
+                        
+                        servicesHTML += `
+                            <tr>
+                                <td><strong>${serviceName}</strong></td>
+                                <td>${stats.count}</td>
+                                <td>₹${stats.revenue.toLocaleString('en-IN')}</td>
+                                <td>${percentage}%</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    servicesHTML += '</tbody></table>';
+                    
+                    reportHTML = `
+                        <div class="report-card">
+                            <h3>சேவை வாரியான அறிக்கை</h3>
+                            <p>மொத்த வாடிக்கையாளர்கள்: ${customers.length}</p>
+                            ${servicesHTML}
+                        </div>
+                    `;
+                }
+            } else {
+                // வாடிக்கையாளர் அறிக்கை
+                let filteredCustomers = customers;
+                
+                if (fromDate) {
+                    filteredCustomers = filteredCustomers.filter(c => c.registrationDate >= fromDate);
+                }
+                if (toDate) {
+                    filteredCustomers = filteredCustomers.filter(c => c.registrationDate <= toDate);
+                }
+                
+                if (filteredCustomers.length === 0) {
+                    reportHTML = '<div class="no-data"><p>வாடிக்கையாளர்கள் இல்லை</p></div>';
+                } else {
+                    let customersHTML = '<table><thead><tr><th>பதிவு தேதி</th><th>வாடிக்கையாளர்</th><th>தொலைபேசி</th><th>சேவைகள்</th><th>மொத்த தொகை</th><th>பேலன்ஸ்</th></tr></thead><tbody>';
+                    
+                    filteredCustomers.sort((a, b) => new Date(b.registrationDate) - new Date(a.registrationDate));
+                    
+                    filteredCustomers.forEach(customer => {
+                        customersHTML += `
+                            <tr>
+                                <td>${formatDate(customer.registrationDate)}</td>
+                                <td>
+                                    <strong>${customer.name}</strong><br>
+                                    <small>${customer.id}</small>
+                                </td>
+                                <td>${customer.phone}</td>
+                                <td>
+                                    <div class="service-tags">
+                                        ${customer.services.slice(0, 2).map(service => `<span class="service-tag">${service}</span>`).join('')}
+                                        ${customer.services.length > 2 ? `<span class="service-tag">+${customer.services.length - 2}</span>` : ''}
+                                    </div>
+                                </td>
+                                <td>₹${customer.totalAmount.toLocaleString('en-IN')}</td>
+                                <td style="color: ${customer.balanceAmount > 0 ? '#e74c3c' : '#27ae60'}; font-weight: 700;">₹${customer.balanceAmount.toLocaleString('en-IN')}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    customersHTML += '</tbody></table>';
+                    
+                    const newCustomers = filteredCustomers.length;
+                    const totalRevenue = filteredCustomers.reduce((sum, c) => sum + c.totalAmount, 0);
+                    const totalPaid = filteredCustomers.reduce((sum, c) => sum + c.paidAmount, 0);
+                    
+                    reportHTML = `
+                        <div class="report-card">
+                            <h3>வாடிக்கையாளர் அறிக்கை</h3>
+                            <p>புதிய வாடிக்கையாளர்கள்: ${newCustomers} | மொத்த வருவாய்: ₹${totalRevenue.toLocaleString('en-IN')} | செலுத்தப்பட்டது: ₹${totalPaid.toLocaleString('en-IN')}</p>
+                            ${customersHTML}
+                        </div>
+                    `;
+                }
+            }
+            
+            document.getElementById('report-output').innerHTML = reportHTML;
+        }
+
+        // டாஷ்போர்டு புதுப்பி
+        function updateDashboard() {
+            const totalCustomers = customers.length;
+            const activeCustomers = customers.filter(c => c.services.length > 0).length;
+            const totalDebt = customers.reduce((sum, c) => sum + c.balanceAmount, 0);
+            const totalRevenue = customers.reduce((sum, c) => sum + c.paidAmount, 0);
+            
+            document.getElementById('total-customers').textContent = totalCustomers;
+            document.getElementById('active-customers').textContent = activeCustomers;
+            document.getElementById('total-debt').textContent = `₹${totalDebt.toLocaleString('en-IN')}`;
+            document.getElementById('total-revenue').textContent = `₹${totalRevenue.toLocaleString('en-IN')}`;
+        }
+
+        // கட்டண வாடிக்கையாளர் தேர்வை புதுப்பி
+        function updatePaymentCustomerSelect() {
+            let options = '<option value="">வாடிக்கையாளரைத் தேர்ந்தெடுக்கவும்</option>';
+            
+            customers.sort((a, b) => a.name.localeCompare(b.name)).forEach(customer => {
+                const balanceText = customer.balanceAmount > 0 ? ` (பேலன்ஸ்: ₹${customer.balanceAmount.toLocaleString('en-IN')})` : '';
+                options += `<option value="${customer.id}">${customer.name}${balanceText}</option>`;
+            });
+            
+            paymentCustomerSelect.innerHTML = options;
+        }
+
+        // தாவல்கள் மாற்றம்
+        function switchTab(tabName) {
+            // தாவல் பொத்தான்கள்
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.tab-btn[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            
+            // தாவல் உள்ளடக்கம்
+            document.querySelectorAll('.form-container, .services-container, .reports-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            
+            // முக்கிய உள்ளடக்கம்
+            document.getElementById('customers-tab').style.display = tabName === 'customers' ? 'block' : 'none';
+            
+            if (tabName === 'customer' || tabName === 'payment' || tabName === 'services' || tabName === 'reports') {
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            }
+            
+            if (tabName === 'services') {
+                renderServicesManagement();
+            }
+            
+            if (tabName === 'reports') {
+                document.getElementById('report-from').valueAsDate = new Date(new Date().setDate(1));
+                document.getElementById('report-to').valueAsDate = new Date();
+            }
+            
+            // பேலன்ஸ் தகவலை மறை
+            document.getElementById('customer-balance-info').style.display = 'none';
+        }
+
+        // தேடல் மற்றும் வடிகட்டல்
+        searchInput.addEventListener('input', updateFilters);
+        filterStatusSelect.addEventListener('change', updateFilters);
+        
+        function updateFilters() {
+            renderCustomers(
+                searchInput.value,
+                filterStatusSelect.value
+            );
+        }
+        
+        function clearFilters() {
+            searchInput.value = '';
+            filterStatusSelect.value = 'all';
+            renderCustomers();
+        }
+
+        // படிவங்களை மீட்டமை
+        function resetCustomerForm() {
+            customerForm.reset();
+            document.getElementById('customer-id').value = '';
+            document.getElementById('submit-btn').style.display = 'block';
+            document.getElementById('update-btn').style.display = 'none';
+            document.getElementById('cancel-btn').style.display = 'none';
+            editCustomerId = null;
+            
+            // சேவைகளை தேர்வு நீக்க
+            document.querySelectorAll('#services-list input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+        
+        function resetPaymentForm() {
+            paymentForm.reset();
+            document.getElementById('payment-date').valueAsDate = new Date();
+            document.getElementById('customer-balance-info').style.display = 'none';
+        }
+        
+        function resetServiceForm() {
+            serviceForm.reset();
+            serviceSubmitBtn.innerHTML = '➕ சேவையை சேர்க்க';
+            editServiceId = null;
+        }
+
+        // அச்சிடு செயல்பாடுகள்
+        function printCustomerList() {
+            const originalTitle = document.title;
+            document.title = `தாஸ் பொது சேவை மையம் - வாடிக்கையாளர் பட்டியல் - ${new Date().toLocaleDateString('ta-IN')}`;
+            window.print();
+            setTimeout(() => { document.title = originalTitle; }, 1000);
+        }
+        
+        function printCustomerDetails(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+            
+            const originalTitle = document.title;
+            document.title = `தாஸ் - ${customer.name} - வாடிக்கையாளர் விவரங்கள் - ${new Date().toLocaleDateString('ta-IN')}`;
+            window.print();
+            setTimeout(() => { document.title = originalTitle; }, 1000);
+        }
+        
+        function printReport() {
+            const originalTitle = document.title;
+            document.title = `தாஸ் பொது சேவை மையம் - அறிக்கை - ${new Date().toLocaleDateString('ta-IN')}`;
+            window.print();
+            setTimeout(() => { document.title = originalTitle; }, 1000);
+        }
+
+        // தரவு ஏற்றுமதி/இறக்குமதி
+        function exportData() {
+            const data = {
+                customers: customers,
+                services: services,
+                payments: payments,
+                exportDate: new Date().toISOString(),
+                company: {
+                    name: "தாஸ் பொது சேவை மையம்",
+                    address: "147எ, கிரேட் காட்டன் ரோடு, மத்திய பாகம் காவல் நிலையம் எதிரில், தூத்துக்குடி-628001",
+                    phones: ["98 43 23 23 24", "88 70 23 23 32", "95 85 33 43 65"],
+                    email: "dhasscsc@gmail.com"
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dass-csc-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('அனைத்து தரவுகளும் வெற்றிகரமாக ஏற்றுமதி செய்யப்பட்டன!');
+        }
+        
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        if (confirm('தற்போதைய தரவுகள் அழிக்கப்படும். தொடர விரும்புகிறீர்களா?')) {
+                            customers = data.customers || [];
+                            services = data.services || [];
+                            payments = data.payments || [];
+                            
+                            saveCustomers();
+                            saveServices();
+                            savePayments();
+                            
+                            renderCustomers();
+                            renderServicesCheckboxes();
+                            renderServicesManagement();
+                            updateDashboard();
+                            updatePaymentCustomerSelect();
+                            
+                            alert('தரவுகள் வெற்றிகரமாக இறக்குமதி செய்யப்பட்டன!');
+                        }
+                    } catch (error) {
+                        alert('தரவுகளை இறக்குமதி செய்ய முடியவில்லை. கோப்பு சரியான வடிவத்தில் இல்லை.');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        // தரவுகளை சேமி
+        function saveCustomers() {
+            localStorage.setItem('dassCustomers', JSON.stringify(customers));
+        }
+        
+        function saveServices() {
+            localStorage.setItem('dassServices', JSON.stringify(services));
+        }
+        
+        function savePayments() {
+            localStorage.setItem('dassPayments', JSON.stringify(payments));
+        }
+
+        // உதவி செயல்பாடுகள்
+        function formatDate(dateString) {
+            if (!dateString) return 'தெரியவில்லை';
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('ta-IN', options);
+        }
+        
+        function getPaymentModeText(mode) {
+            const modes = {
+                'cash': 'பணம்',
+                'online': 'ஆன்லைன்',
+                'cheque': 'செக்',
+                'upi': 'UPI'
+            };
+            return modes[mode] || mode;
+        }
+
+        // அச்சிடும் போது தலைப்பு சேர்க்க
+        window.onbeforeprint = function() {
+            const printHeader = document.createElement('div');
+            printHeader.className = 'print-header';
+            printHeader.innerHTML = `
+                <h2>தாஸ் பொது சேவை மையம் - வாடிக்கையாளர் மேலாண்மை</h2>
+                <p>147எ, கிரேட் காட்டன் ரோடு, மத்திய பாகம் காவல் நிலையம் எதிரில், தூத்துக்குடி-628001</p>
+                <p>அச்சிட்ட தேதி: ${new Date().toLocaleDateString('ta-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            `;
+            document.body.insertBefore(printHeader, document.querySelector('.container'));
+        };
+
+        window.onafterprint = function() {
+            const printHeader = document.querySelector('.print-header');
+            if (printHeader) printHeader.remove();
+        };
+
+        // மாதிரி தரவு (முதல் முறை பயன்படுத்தும் போது)
+        if (customers.length === 0) {
+            const sampleDate = new Date();
+            sampleDate.setMonth(sampleDate.getMonth() - 1);
+            
+            customers = [
+                {
+                    id: 'DASS001',
+                    name: 'ரமேஷ் குமார்',
+                    phone: '9843232324',
+                    phone2: '8870232332',
+                    address: '45, நந்தனம், தூத்துக்குடி-628001',
+                    aadhar: '1234 5678 9012',
+                    services: ['ஆதார் கார்டு', 'பான் கார்டு'],
+                    totalAmount: 200,
+                    paidAmount: 200,
+                    balanceAmount: 0,
+                    notes: 'விரைவான சேவை',
+                    status: 'cleared',
+                    registrationDate: sampleDate.toISOString().split('T')[0],
+                    lastPaymentDate: sampleDate.toISOString().split('T')[0]
+                },
+                {
+                    id: 'DASS002',
+                    name: 'சுரேஷ் பாலு',
+                    phone: '9585334365',
+                    phone2: '',
+                    address: '78, பெரியார் நகர், தூத்துக்குடி',
+                    aadhar: '9876 5432 1012',
+                    services: ['பாஸ்போர்ட்', 'வாகன லைசென்ஸ்'],
+                    totalAmount: 2000,
+                    paidAmount: 1000,
+                    balanceAmount: 1000,
+                    notes: 'பேலன்ஸ் உள்ளது',
+                    status: 'debtor',
+                    registrationDate: new Date().toISOString().split('T')[0],
+                    lastPaymentDate: new Date().toISOString().split('T')[0]
+                }
+            ];
+            
+            payments = [
+                {
+                    id: 'PAY001',
+                    customerId: 'DASS001',
+                    customerName: 'ரமேஷ் குமார்',
+                    date: sampleDate.toISOString().split('T')[0],
+                    amount: 200,
+                    mode: 'cash',
+                    reference: 'RC001',
+                    notes: 'முழுதும் செலுத்தியது',
+                    timestamp: sampleDate.toISOString()
+                },
+                {
+                    id: 'PAY002',
+                    customerId: 'DASS002',
+                    customerName: 'சுரேஷ் பாலு',
+                    date: new Date().toISOString().split('T')[0],
+                    amount: 1000,
+                    mode: 'online',
+                    reference: 'UPI123',
+                    notes: 'முதல் கட்டணம்',
+                    timestamp: new Date().toISOString()
+                }
+            ];
+            
+            saveCustomers();
+            savePayments();
+            renderCustomers();
+            updateDashboard();
+            updatePaymentCustomerSelect();
+        }
+    </script>
+</body>
+</html>
